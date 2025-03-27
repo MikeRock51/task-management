@@ -38,4 +38,8 @@ export class TasksService {
         await this.entityManager.save(task);
         return task;
     }
+
+    async deleteTask(id: number): Promise<void> {
+        await this.taskRepository.delete(id)
+    }
 }
