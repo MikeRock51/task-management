@@ -8,9 +8,15 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  signup(@Body() createAuthDto: CreateAuthDto) {
+    return this.authService.signup(createAuthDto);
   }
+
+  @Post('signin')
+  signin(@Body() createAuthDto: CreateAuthDto) {
+    return this.authService.signin(createAuthDto);
+  }
+
 
   @Get()
   findAll() {

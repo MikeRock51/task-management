@@ -13,10 +13,10 @@ export class AuthService {
     private userRepository: Repository<User>,
   ) {}
 
-  async create(createAuthDto: CreateAuthDto) {
+  async signup(createAuthDto: CreateAuthDto) {
     const user = new User(createAuthDto);
-    user.salt = bcrypt.genSaltSync();
-    user.password = await this.hashPassword(user.password, user.salt);
+    const salt = bcrypt.genSaltSync();
+    user.password = await this.hashPassword(user.password, salt);
 
     try {
       await this.userRepository.save(user);
@@ -27,6 +27,17 @@ export class AuthService {
       } else {
         throw new InternalServerErrorException('Error creating user');
       }
+    }
+  }
+
+  async signin(createAuthDto: CreateAuthDto) {
+    const { username, password } = createAuthDto;
+    const user = await this.userRepository.findOneBy({ username });
+
+    if (user && (await user.validatePassword(password))) {
+      return user;
+    } else {
+      throw new BadRequestException('Invalid credentials');
     }
   }
 
